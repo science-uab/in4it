@@ -1,5 +1,3 @@
-# in4it 
+# in4it - training
 
-C/C++ programs
-
-## Fisiere
+**fisiere.cpp** contains several C and C++ functions which exemplifies how files can be read.
