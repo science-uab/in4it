@@ -68,13 +68,13 @@ int read_array_from_file(const char* filename, int *&a, int &a_length)
 	fclose(f);
 
 	if ( 0 == a_length) {
-		return 0
+		return 0;
 	}
 	a = new int[a_length];
 	f = fopen(filename, "r");
 	a_length = 0;
 
-	int num_read = 1;
+	num_read = 1;
 	while (num_read == 1) {
 		int b;
 		num_read = fscanf(f, "%d", &b);
