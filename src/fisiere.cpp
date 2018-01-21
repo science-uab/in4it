@@ -5,7 +5,7 @@
 #include <fstream>
 
 #define E_OK 0
-#define E_NO_SIZE = -1
+#define E_NO_SIZE -1
 #define E_CANNOT_OPEN_FILE -2
 #define E_INVALID_DATA -3
 #define E_EOF -4
