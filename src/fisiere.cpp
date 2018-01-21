@@ -145,6 +145,7 @@ int main()
 		printf("End of file reached ... \n");
 		break;
 	}
+
 	//-------------------------------------------
 	result = read_file_cpp("test.txt", a);
 
@@ -162,6 +163,7 @@ int main()
 		printf("End of file reached ... \n");
 		break;
 	}
+
 	//-------------------------------------------
 	int *x = NULL;
 	int x_length;
