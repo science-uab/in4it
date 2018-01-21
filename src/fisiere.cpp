@@ -5,9 +5,10 @@
 #include <fstream>
 
 #define E_OK 0
-#define E_CANNOT_OPEN_FILE 1
-#define E_EOF 3
-#define E_INVALID_DATA 2
+#define E_NO_SIZE = -1
+#define E_CANNOT_OPEN_FILE -2
+#define E_INVALID_DATA -3
+#define E_EOF -4
 
 //--------------------------------------------------
 int get_file_size(const char* filename)
@@ -116,11 +117,15 @@ int main()
 	int a;
 
 	int file_size = get_file_size("test.txt");
-	if (file_size == -1) {
-		printf("Cannot read file ...\n");
-	}
-	else {
-		printf("file size = %d\n", file_size);
+	switch (file_size) {
+		case E_CANNOT_OPEN_FILE:
+			printf("Cannot open file ...\n");
+			break;
+		case E_NO_SIZE:
+			printf("Cannot retrieve file size ...\n");
+			break;
+		default:
+			printf("file size = %d\n", file_size);
 	}
 
 	//-------------------------------------------
