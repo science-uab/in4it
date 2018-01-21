@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <fstream>
 
+//--------------------------------------------------
+
 #define E_OK 0
 #define E_CANNOT_OPEN_FILE 1
 #define E_EOF 3
