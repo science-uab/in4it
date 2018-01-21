@@ -1,54 +1,51 @@
-// author: Mihai Oltean
+﻿// author: Mihai Oltean
 // MIT license
 
 #include <stdio.h>
 #include <fstream>
 
-//--------------------------------------------------
-
 #define E_OK 0
-#define E_CANNOT_OPEN_FILE 1
-#define E_EOF 3
-#define E_INVALID_DATA 2
-//--------------------------------------------------
+#define E_NO_SIZE -1
+#define E_CANNOT_OPEN_FILE -2
+#define E_INVALID_DATA -3
+#define E_EOF -4
 
+//--------------------------------------------------
 int get_file_size(const char* filename)
 {
 	FILE *f;
 
 	f = fopen(filename, "r");
-	if (f) {
-		fseek(f, 0, SEEK_END);
-		int file_size = ftell(f);
-		fclose(f);
-		return file_size;
+	// return early, return cause
+	if (NULL==f) {
+		return E_CANNOT_OPEN_FILE;
 	}
-	else
-		return -1;
+	fseek(f, 0, SEEK_END);
+	int file_size = ftell(f);
+	fclose(f);
+	return file_size;
 }
-//--------------------------------------------------
 
+//--------------------------------------------------
 int read_file(const char* filename, int &a)
 {
 	FILE *f;
 
 	f = fopen(filename, "r");
-	if (f) {
-		int num_read = fscanf(f, "%d", &a);
-		if (num_read == 0) {
-			fclose(f);
-			return E_INVALID_DATA;
-		}
-		else
-			if (num_read == -1) {
-				fclose(f);
-				return E_EOF;
-			}
-		fclose(f);
-		return E_OK;
+	if (NULL == f) {
+		return E_CANNOT_OPEN_FILE;
 	}
-	return E_CANNOT_OPEN_FILE;
+	int num_read = fscanf(f, "%d", &a);
+	fclose(f);
+	if (num_read == 0) {
+		return E_INVALID_DATA;
+	}
+	if (num_read == -1) {
+		return E_EOF;
+	}
+	return E_OK;
 }
+
 //--------------------------------------------------
 int read_array_from_file(const char* filename, int *&a, int &a_length)
 {
@@ -56,39 +53,41 @@ int read_array_from_file(const char* filename, int *&a, int &a_length)
 	FILE *f;
 
 	f = fopen(filename, "r");
-	if (f) {
-		a_length = 0;
-
-		int num_read = 1;
-		while (num_read == 1) {
-			int b;
-			num_read = fscanf(f, "%d", &b);
-			a_length++;
-		}
-		a_length--;
-		fclose(f);
-	}
-	else
+	if (NULL == f) {
 		return E_CANNOT_OPEN_FILE;
-
-	if (a_length) {
-		a = new int[a_length];
-		f = fopen(filename, "r");
-		a_length = 0;
-
-		int num_read = 1;
-		while (num_read == 1) {
-			int b;
-			num_read = fscanf(f, "%d", &b);
-			if (num_read == 1) {
-				a[a_length] = b;
-				a_length++;
-			}
-		}
-		fclose(f);
 	}
+	a_length = 0;
+
+	int num_read = 1;
+	while (num_read == 1) {
+		int b;
+		num_read = fscanf(f, "%d", &b);
+		a_length++;
+	}
+	a_length--;
+	fclose(f);
+
+	if ( 0 == a_length) {
+		return 0
+	}
+	a = new int[a_length];
+	f = fopen(filename, "r");
+	a_length = 0;
+
+	int num_read = 1;
+	while (num_read == 1) {
+		int b;
+		num_read = fscanf(f, "%d", &b);
+		if (num_read != 1) {
+			continue;
+		}
+		a[a_length] = b;
+		a_length++;
+	}
+	fclose(f);
 	return E_OK;
 }
+
 //--------------------------------------------------
 void print_array(int *x, int x_length)
 {
@@ -96,6 +95,7 @@ void print_array(int *x, int x_length)
 		printf("%d ", x[i]);
 	printf("\n");
 }
+
 //--------------------------------------------------
 int read_file_cpp(const char* filename, int &a)
 {
@@ -110,17 +110,22 @@ int read_file_cpp(const char* filename, int &a)
 	f.close();
 	return E_OK;
 }
+
 //--------------------------------------------------
 int main()
 {
 	int a;
 
 	int file_size = get_file_size("test.txt");
-	if (file_size == -1) {
-		printf("Cannot read file ...\n");
-	}
-	else {
-		printf("file size = %d\n", file_size);
+	switch (file_size) {
+		case E_CANNOT_OPEN_FILE:
+			printf("Cannot open file ...\n");
+			break;
+		case E_NO_SIZE:
+			printf("Cannot retrieve file size ...\n");
+			break;
+		default:
+			printf("file size = %d\n", file_size);
 	}
 
 	//-------------------------------------------
@@ -140,6 +145,7 @@ int main()
 		printf("End of file reached ... \n");
 		break;
 	}
+
 	//-------------------------------------------
 	result = read_file_cpp("test.txt", a);
 
@@ -157,6 +163,7 @@ int main()
 		printf("End of file reached ... \n");
 		break;
 	}
+
 	//-------------------------------------------
 	int *x = NULL;
 	int x_length;
