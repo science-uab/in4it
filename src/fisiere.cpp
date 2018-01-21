@@ -18,7 +18,7 @@ int get_file_size(const char* filename)
 	f = fopen(filename, "r");
 	// return early, return cause
 	if (NULL==f) {
-		return E_CANNOT_OPEN_FILE
+		return E_CANNOT_OPEN_FILE;
 	}
 	fseek(f, 0, SEEK_END);
 	int file_size = ftell(f);
