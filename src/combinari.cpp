@@ -15,12 +15,13 @@ void genereaza_combinari(int n, int m, int *solutie, int pozitie_curenta)
 		afiseaza_combinare(m, solutie)
 		;
 	else {
-		for (int valoare = pozitie_curenta == 0?1 : solutie[pozitie_curenta - 1] + 1; valoare <= n; valoare++) {
+		for (int valoare = pozitie_curenta?solutie[pozitie_curenta - 1] + 1: 1; valoare <= n; valoare++) {
 				solutie[pozitie_curenta] = valoare;
 				genereaza_combinari(n, m, solutie, pozitie_curenta + 1);
 			}
 		}
-}
+} 
+// int x = a==b?2:5
 //--------------------------------------
 int main(void)
 {
